@@ -59,7 +59,19 @@
 		
 	}
 	
-	
+
+	function checkTextEntered(event){
+		
+		//console.log(event.keyCode);
+		
+		//zakiah19102024:if enter is prssed
+		if(event.keyCode == 13){
+			let currValue = $("textarea").val();
+			$("textarea").val(currValue + "<br/>");
+		}
+		
+	}
+
 	function viewForm(page){
 		
 		if(page === 'main'){
