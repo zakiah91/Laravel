@@ -10,7 +10,7 @@
 		<br/><br/>
 		<div class="col-md-12">
 			<label class="form-label"><b>Content :</b></label>
-			<textarea class="form-control" rows="12"></textarea>
+			<textarea class="form-control" rows="12" onKeyDown="checkTextEntered(event)"></textarea>
 		</div>
 		<br></br>
 		<button onClick="submitForm()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#postStatus">Submit</button>
