@@ -25,6 +25,11 @@ Route::get('/index', function(){
 });
 
 
+Route::get('/history',function(){
+	return view('pages.history');
+});
+
+
 Route::get('/main',function(){
 	$pageController = new PageController();
 	
