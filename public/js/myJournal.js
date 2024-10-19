@@ -3,6 +3,9 @@
 	let mainUrl = "http://localhost:8080";
 
 	let laravelUrl = "http://localhost:8000";
+	
+	
+
 
 	function getContent(){
 		
@@ -27,7 +30,7 @@
 			
 			myTable += "<thead>"+
 							"<tr>" +
-								"<th class=\"col-md-1\">Action</th>" +
+								"<th class=\"col-md-2\">Action</th>" +
 								"<th class=\"col-md-1\">#</th>" +
 								"<th class=\"col-md-2\">Date</th>" +
 								"<th>Content</th>" +
@@ -38,7 +41,9 @@
 			
 			for(let i=0;i<data.length;i++){
 				myTable += "<tr id=\""+i+"\">" +
-								"<td><button onclick=\"removeCell("+i+")\" class=\"btn btn-warning\">Delete</button></td>"+
+								"<td><button onclick=\"removeCell("+i+")\" class=\"btn btn-warning\">Delete</button>"+
+									 "&nbsp;<button onclick=\"editContent("+i+")\" class=\"btn btn-success\">Edit</button>" +
+								"</td>"+
 								"<td>"+i+"</td>"+
 								"<td>"+data[i].date+"</td>" +
 								"<td>"+data[i].content+"</td>"+
@@ -59,19 +64,49 @@
 		
 	}
 	
-
-	function checkTextEntered(event){
+	function editContent(idx){
+		let tblRow = $("table tr")[idx+1];
+		
+		console.log(tblRow);
+		
+		console.log(tblRow.cells[3].innerHTML);
+		
+		//$("#modalText").css("display","none");
+		$("#modalText").text("Date : "+ tblRow.cells[2].innerHTML);
+		$("#myEditedContent").css("display","block");
+		$("#myEditedContent").val(tblRow.cells[3].innerHTML);
+		$("#postStatus").modal("show");
+		
+		console.log($("#myEditedContent").css("display"));
+	}
+	
+	function modalDone(){
+		
+		if($("#myEditedContent").css("display")==="block"){
+			
+			//$("#modalText").css("display","block");
+			//$("#modalText").text("Data is successfully inserted.");
+			$("#myEditedContent").css("display","none");
+			submitForm("myEditedContent");
+		}
+		
+		
+	}
+	
+	
+	function checkTextEntered(event,place){
 		
 		//console.log(event.keyCode);
 		
 		//zakiah19102024:if enter is prssed
 		if(event.keyCode == 13){
-			let currValue = $("textarea").val();
-			$("textarea").val(currValue + "<br/>");
+			let currId = (place==="myText")?"#myText":"#myEditedContent";
+			let currValue = $(currId).val();
+			$(currId).val(currValue + "<br/>");
 		}
 		
 	}
-
+	
 	function viewForm(page){
 		
 		if(page === 'main'){
@@ -118,16 +153,20 @@
 	}
 	
 	
-	function submitForm(){
+	function submitForm(content){
 		
 		//console.log($("input[type='date']").val());
 		
-		//console.log($("textarea").val());
+		//console.log($("#myText").val());
 		
 		let path = mainUrl + "/journal/post";
 		
-		let data = {"date": $("input[type='date']").val(),
-		            "content": $("textarea").val()};
+		let currId = (content === 'myText') ? "#myText":"#myEditedContent";
+		
+		let datePosition = (content === 'myText') ? $("input[type='date']").val() : $("#modalText").text().substring(7);
+		
+		let data = {"date": datePosition,
+		            "content": $(currId).val()};
 		
 		$.ajax({
 			type: "POST",
@@ -140,6 +179,7 @@
 			data: data,
 			success: function(response){
 				console.log("OK");
+				location.reload();
 			},
 			error: function(error){
 				console.log("NG");
