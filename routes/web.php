@@ -26,7 +26,13 @@ Route::get('/index', function(){
 
 
 Route::get('/history',function(){
-	return view('pages.history');
+	
+	$pageController = new PageController();
+	
+	if($pageController->isSessionExist())
+		return view('pages.history');
+	else
+		return view('pages.login');
 });
 
 
