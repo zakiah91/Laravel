@@ -4,8 +4,26 @@
 
 	let laravelUrl = "http://localhost:8000";
 	
+	let serverSelection = "";
 	
-
+	function setServerSelection(value){
+		window.serverSelection = value;
+		console.log(value);
+	}
+	
+	function getServerSelection(){
+		
+		if(serverSelection === ""){
+			return "php";
+		}
+		
+		return window.serverSelection;
+	}
+	
+	function setMainUrl(){
+		return ((getServerSelection() == "php") ? laravelUrl : mainUrl);
+	}
+	
 
 	function getContent(){
 		
@@ -128,9 +146,11 @@
 	
 	function reloadPage(){
 		
-		let path = mainUrl + "/login/update";
+		let path = setMainUrl() + "/login/update";
 		
-		let data = {"password": $("#newPwd").val()};
+		let data = (getServerSelection() == "java") ?
+					{"password": $("#newPwd").val()} :
+					{"password": $("#newPwd").val(), "_token" : $("input[name=_token]").val()} ;
 		
 		$.ajax({
 			type: "POST",
@@ -190,19 +210,23 @@
 	
 	function tryLogin(){
 		
-		let path = mainUrl + "/login/isValid";
+		let path = ((getServerSelection() === 'java') ? mainUrl : laravelUrl) + "/login/isValid";
 		
-		let data = {"password": $("#pwd").val()};
+		let data = (getServerSelection() === 'java') ?
+						{"password": $("#pwd").val() } :
+						{"password": $("#pwd").val(), "_token": $("input[name=_token]").val()};
+		
+		let headerValue = {"Accept": "application/json"} ;
 		
 		console.log(data);
+		console.log($("input[name=_token]").val());
+		console.log("serverSelection = " +getServerSelection());
 		
 		$.ajax({
 			type: "POST",
 			crossDomain: true,
 			dataType : "json",
-			headers:{
-				"Accept": "application/json"
-			},
+			headers: headerValue,
 			url: path,
 			data: data,
 			success : function(response){
@@ -213,6 +237,7 @@
 			},
 			error: function(error){
 				console.log("NG");
+				//console.log(error);
 			}
 		});
 		
