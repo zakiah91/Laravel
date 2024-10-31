@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
-
+use Illuminate\Http\Request;
 //Created by: zakiah zulkefli ,16 Oct 2024
 /*
 |--------------------------------------------------------------------------
@@ -16,7 +16,7 @@ use App\Http\Controllers\PageController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('pages.runServer');
 });
 
 
@@ -35,6 +35,24 @@ Route::get('/history',function(){
 		return view('pages.login');
 });
 
+Route::get('/runServer',function(){
+	
+	return view('pages.runServer');
+	
+});
+
+
+Route::get('/setServer', function(Request $request){
+	
+	$selection = $request->get('server');
+	
+	$pageController = new PageController();
+	
+	$pageController->setServer($selection);
+
+	return redirect("/login");
+});
+
 
 Route::get('/main',function(){
 	$pageController = new PageController();
@@ -42,7 +60,7 @@ Route::get('/main',function(){
 	if($pageController->isSessionExist())
 		return view('pages.main');
 	else
-		return view('pages.login');
+		return redirect('/login');
 });
 
 
@@ -51,17 +69,35 @@ Route::get('/logout',function(){
 	
 	$pageController->deleteSession();
 	
-	return view('pages.login');
+	return redirect('/login');
 });
 
 
+Route::post('/login/isValid',[PageController::class,'isLoginValid']);
+
+Route::post('/login/update',[PageController::class,'updateLogin']);
+
 Route::get('/login',function(){
-	return view('pages.login');
+	
+	$pageController = new PageController();
+	
+	if(!$pageController->isServerSessionExist() && $pageController->isSessionExist()){
+		return redirect('/runServer');
+	}
+	else{
+		//echo "server : ".$pageController->getServer();
+		
+		return view('pages.login',[
+								   'serverSession'=> $pageController->getServer()
+								 ]);
+	}						 
 });
 
 
 Route::get('/setSession',function(){
+	
 	$pageController = new PageController();
+	
 	$pageController->setSession();
 	
 	//echo var_dump($pageController->getSession());
