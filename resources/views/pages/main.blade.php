@@ -6,7 +6,7 @@
 
 	<div class="container" id="write" style="display:block;">
 		<br/><br/>
-
+		@csrf
 		<div class="col-md-2">
 			<label class="form-label"><b>Date :</b></label>
 			<input type="date" class="form-control" id="formDate"/>
