@@ -27,7 +27,7 @@
 
 	function getContent(){
 		
-		let url = mainUrl + "/journal";
+		let url = setMainUrl() + "/journal";
 		
 		//container
 		$("#history").css("display","block");
@@ -179,14 +179,15 @@
 		
 		//console.log($("#myText").val());
 		
-		let path = mainUrl + "/journal/post";
+		let path = setMainUrl() + "/journal/post";
 		
 		let currId = (content === 'myText') ? "#myText":"#myEditedContent";
 		
 		let datePosition = (content === 'myText') ? $("input[type='date']").val() : $("#modalText").text().substring(7);
 		
-		let data = {"date": datePosition,
-		            "content": $(currId).val()};
+		let data = (getServerSelection() == 'java') ?
+							{"date": datePosition,"content": $(currId).val()} :
+							{"date": datePosition,"content": $(currId).val() , "_token" : $("input[name=_token]").val()} ;
 		
 		$.ajax({
 			type: "POST",
@@ -250,13 +251,15 @@
 	
 	function removeCell(i){
 		
-		let path = mainUrl + "/journal/delete";
+		let path = setMainUrl() + "/journal/delete";
 		
 		let tRow = $("table tr")[i+1];
 		
 		console.log(tRow.cells[2].innerHTML);
 		
-		let data = {"date":tRow.cells[2].innerHTML};
+		let data = (getServerSelection() === 'java') ?
+					{"date":tRow.cells[2].innerHTML} :
+					{"date":tRow.cells[2].innerHTML, "_token":$("input[name=_token]").val()};
 		
 		for(let i=0;i<tRow.length;i++){
 			console.log(tRow[i]);
