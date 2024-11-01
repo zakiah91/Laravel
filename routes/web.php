@@ -77,11 +77,17 @@ Route::post('/login/isValid',[PageController::class,'isLoginValid']);
 
 Route::post('/login/update',[PageController::class,'updateLogin']);
 
+Route::post("/journal/post",[PageController::class,'submitFormData']);
+
+Route::get("/journal",[PageController::class,'getTableData']);
+
+Route::post("/journal/delete",[PageController::class,"deleteTableData"]);
+
 Route::get('/login',function(){
 	
 	$pageController = new PageController();
 	
-	if(!$pageController->isServerSessionExist() && $pageController->isSessionExist()){
+	if(!$pageController->isServerSessionExist() && !$pageController->isSessionExist()){
 		return redirect('/runServer');
 	}
 	else{
