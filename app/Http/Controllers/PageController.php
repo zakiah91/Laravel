@@ -25,7 +25,8 @@ class PageController extends Controller{
 	
 	
 	function deleteSession(){
-		Session::forget("isAllowAccess");
+		//Session::forget("isAllowAccess");
+		Session::flush();
 	}
 	
 	function isSessionExist(){
@@ -72,6 +73,41 @@ class PageController extends Controller{
 			  ->update(['password'=>$request->post('password')]);
 			  
 		return true;
+	}
+	
+	function submitFormData(Request $request){
+		
+		$tableName = "journal";
+		
+		$db = DB::table($tableName)
+		      -> insert(['local_date' => $request-> post("date"),
+			             'content' => $request->post("content")]);
+						 
+		return true;
+		
+	}
+	
+	function getTableData(){
+		
+		$tableName = "journal";
+		
+		$db = DB::select("select local_date AS date, content from ".$tableName);
+		
+		return json_decode(json_encode($db,true));
+		
+		//return var_dump(json_encode($db));
+	}
+	
+	function deleteTableData(Request $request){
+		
+		$tableName = "journal";
+		
+		$db = DB::table($tableName)
+			  ->where("local_date","=",$request->post("date"))
+			  ->delete();
+			  
+		return true;
+		
 	}
 	
 }
