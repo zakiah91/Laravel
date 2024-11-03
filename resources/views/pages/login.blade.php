@@ -9,6 +9,10 @@
 	<div class="container" style="display:block;" id="login">
 			@csrf
 			<div class="mt-5 row">
+				<label class="text-center"><b>Username : </b></label>
+				<input type="username" class="mt-3 form-control" id="username"/>
+			</div>
+			<div class="mt-5 row">
 				<label class="text-center"><b>Password : </b></label>
 				<input type="password" class="mt-3 form-control" id="pwd"/>
 			</div>
