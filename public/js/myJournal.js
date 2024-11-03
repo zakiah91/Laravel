@@ -13,7 +13,7 @@
 	
 	function getServerSelection(){
 		
-		if(serverSelection === ""){
+		if(window.serverSelection === ""){
 			return "php";
 		}
 		
@@ -214,12 +214,12 @@
 		let path = ((getServerSelection() === 'java') ? mainUrl : laravelUrl) + "/login/isValid";
 		
 		let data = (getServerSelection() === 'java') ?
-						{"password": $("#pwd").val() } :
-						{"password": $("#pwd").val(), "_token": $("input[name=_token]").val()};
+						{"usrName": $("#username").val(),"pwd" : $("#pwd").val() } :
+						{"password": $("#pwd").val(),"usrName": $("#username").val() ,"_token": $("input[name=_token]").val()};
 		
 		let headerValue = {"Accept": "application/json"} ;
 		
-		console.log(data);
+		//console.log(data);
 		console.log($("input[name=_token]").val());
 		console.log("serverSelection = " +getServerSelection());
 		
@@ -231,9 +231,7 @@
 			url: path,
 			data: data,
 			success : function(response){
-				if(response == true){
-					location.href  = laravelUrl + "/setSession";
-				}
+				location.href  = laravelUrl + "/setSession/"+response;
 				console.log(response);
 			},
 			error: function(error){
