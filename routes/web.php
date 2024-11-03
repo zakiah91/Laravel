@@ -100,11 +100,13 @@ Route::get('/login',function(){
 });
 
 
-Route::get('/setSession',function(){
+Route::get('/setSession/{accessId}',function($accessId){
 	
 	$pageController = new PageController();
 	
-	$pageController->setSession();
+	$pageController->setSession($accessId);
+	
+	//echo $accessId;
 	
 	//echo var_dump($pageController->getSession());
 	//echo var_dump($pageController->getSession());
