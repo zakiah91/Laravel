@@ -14,8 +14,8 @@ class PageController extends Controller{
 	}
 	
 	
-	function setSession(){
-		Session::put("isAllowAccess","OK");
+	function setSession($accessId){
+		Session::put("isAllowAccess",$accessId);
 	}
 	
 	
@@ -55,13 +55,17 @@ class PageController extends Controller{
 		$tableName = "login";
 		
 		$db = DB::table($tableName)
+				->select("access_id")
+				->where("username",$request->post("usrName"))
 				->where("password",$request->post("password"))
 				->get();
 				
-		if(sizeof(json_decode(json_encode($db,true))) == 0)
-			return false;
-		else
-			return true;
+		$res = json_decode($db,true);
+				
+		 if($res == null)
+			 return "ERR";
+		 else
+			return $res[0]["access_id"];
 		
 	}
 	
